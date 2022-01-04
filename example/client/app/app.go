@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 
-	"github.com/caos/oidc/pkg/client/rp"
-	httphelper "github.com/caos/oidc/pkg/http"
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/client/rp"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 var (
@@ -70,15 +70,15 @@ func main() {
 	}
 
 	//you could also just take the access_token and id_token without calling the userinfo endpoint:
-	//
-	//marshalToken := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty) {
-	//	data, err := json.Marshal(tokens)
-	//	if err != nil {
-	//		http.Error(w, err.Error(), http.StatusInternalServerError)
-	//		return
-	//	}
-	//	w.Write(data)
-	//}
+	
+	// marshalToken := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty) {
+	// 	data, err := json.Marshal(tokens)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	w.Write(data)
+	// }
 
 	//register the CodeExchangeHandler at the callbackPath
 	//the CodeExchangeHandler handles the auth response, creates the token request and calls the callback function
@@ -89,7 +89,7 @@ func main() {
 
 	//if you would use the callback without calling the userinfo endpoint, simply switch the callback handler for:
 	//
-	//http.Handle(callbackPath, rp.CodeExchangeHandler(marshalToken, provider))
+	// http.Handle(callbackPath, rp.CodeExchangeHandler(marshalToken, provider))
 
 	lis := fmt.Sprintf("127.0.0.1:%s", port)
 	logrus.Infof("listening on http://%s/", lis)

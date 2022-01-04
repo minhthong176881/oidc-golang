@@ -1,7 +1,7 @@
 package op
 
 import (
-	"github.com/caos/oidc/pkg/crypto"
+	"github.com/minhthong176881/oidc-golang/pkg/crypto"
 )
 
 type Crypto interface {

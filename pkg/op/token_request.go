@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/url"
 
-	httphelper "github.com/caos/oidc/pkg/http"
-	"github.com/caos/oidc/pkg/oidc"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 type Exchanger interface {

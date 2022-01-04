@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/caos/oidc/pkg/crypto"
-	"github.com/caos/oidc/pkg/oidc"
-	"github.com/caos/oidc/pkg/strings"
+	"github.com/minhthong176881/oidc-golang/pkg/crypto"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/strings"
 )
 
 type TokenCreator interface {

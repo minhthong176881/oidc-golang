@@ -1,4 +1,4 @@
-module github.com/caos/oidc
+module github.com/minhthong176881/oidc-golang
 
 go 1.15
 

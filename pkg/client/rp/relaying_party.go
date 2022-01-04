@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -12,9 +13,9 @@ import (
 	"golang.org/x/oauth2"
 	"gopkg.in/square/go-jose.v2"
 
-	"github.com/caos/oidc/pkg/client"
-	httphelper "github.com/caos/oidc/pkg/http"
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/client"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 const (
@@ -272,10 +273,15 @@ func AuthURLHandler(stateFn func() string, rp RelyingParty) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		opts := make([]AuthURLOpt, 0)
 		state := stateFn()
+		//Create state cookie
 		if err := trySetStateCookie(w, state, rp); err != nil {
 			http.Error(w, "failed to create state cookie: "+err.Error(), http.StatusUnauthorized)
 			return
 		}
+
+		fmt.Println()
+
+		//Create code challenge
 		if rp.IsPKCE() {
 			codeChallenge, err := GenerateAndStoreCodeChallenge(w, rp)
 			if err != nil {

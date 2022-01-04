@@ -1,7 +1,7 @@
 package rp
 
 import (
-	"github.com/caos/oidc/pkg/oidc/grants/tokenexchange"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc/grants/tokenexchange"
 )
 
 //DelegationTokenRequest is an implementation of TokenExchangeRequest

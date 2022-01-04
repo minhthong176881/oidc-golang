@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/caos/oidc/pkg/oidc/grants/tokenexchange"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc/grants/tokenexchange"
 )
 
 //TokenExchangeRP extends the `RelyingParty` interface for the *draft* oauth2 `Token Exchange`

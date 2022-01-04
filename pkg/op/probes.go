@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	httphelper "github.com/caos/oidc/pkg/http"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
 )
 
 type ProbesFn func(context.Context) error

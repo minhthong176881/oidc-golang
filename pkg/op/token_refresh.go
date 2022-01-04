@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	httphelper "github.com/caos/oidc/pkg/http"
-	"github.com/caos/oidc/pkg/oidc"
-	"github.com/caos/oidc/pkg/strings"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/strings"
 )
 
 type RefreshTokenRequest interface {

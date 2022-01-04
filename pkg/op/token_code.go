@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	httphelper "github.com/caos/oidc/pkg/http"
-	"github.com/caos/oidc/pkg/oidc"
+	httphelper "github.com/minhthong176881/oidc-golang/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 //CodeExchange handles the OAuth 2.0 authorization_code grant, including

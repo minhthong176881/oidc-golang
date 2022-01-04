@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 type AccessTokenVerifier interface {

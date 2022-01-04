@@ -9,8 +9,8 @@ import (
 
 	"gopkg.in/square/go-jose.v2"
 
-	"github.com/caos/oidc/pkg/oidc"
-	"github.com/caos/oidc/pkg/op"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/op"
 )
 
 type AuthStorage struct {
@@ -82,7 +82,6 @@ func (a *AuthRequest) GetNonce() string {
 
 func (a *AuthRequest) GetRedirectURI() string {
 	return a.RedirectURI
-	// return "http://localhost:5556/auth/callback"
 }
 
 func (a *AuthRequest) GetResponseType() oidc.ResponseType {
@@ -235,7 +234,7 @@ func (s *AuthStorage) SetUserinfoFromToken(ctx context.Context, userinfo oidc.Us
 }
 func (s *AuthStorage) SetUserinfoFromScopes(ctx context.Context, userinfo oidc.UserInfoSetter, _, _ string, _ []string) error {
 	userinfo.SetSubject(a.GetSubject())
-	userinfo.SetAddress(oidc.NewUserInfoAddress("Test 789\nPostfach 2", "", "", "", "", ""))
+	userinfo.SetAddress(oidc.NewUserInfoAddress("Test 789\nPostfach 2", "Hanoi", "", "10000", "Vietnam", ""))
 	userinfo.SetEmail("test", true)
 	userinfo.SetPhone("0791234567", true)
 	userinfo.SetName("Test")

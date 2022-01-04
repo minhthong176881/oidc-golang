@@ -3,7 +3,7 @@ package op
 import (
 	"time"
 
-	"github.com/caos/oidc/pkg/oidc"
+	"github.com/minhthong176881/oidc-golang/pkg/oidc"
 )
 
 const (

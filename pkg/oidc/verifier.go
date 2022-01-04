@@ -12,7 +12,7 @@ import (
 
 	"gopkg.in/square/go-jose.v2"
 
-	str "github.com/caos/oidc/pkg/strings"
+	str "github.com/minhthong176881/oidc-golang/pkg/strings"
 )
 
 type Claims interface {

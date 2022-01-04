@@ -10,9 +10,9 @@ import (
 	"golang.org/x/oauth2"
 	githubOAuth "golang.org/x/oauth2/github"
 
-	"github.com/caos/oidc/pkg/client/rp"
-	"github.com/caos/oidc/pkg/client/rp/cli"
-	"github.com/caos/oidc/pkg/http"
+	"github.com/minhthong176881/oidc-golang/pkg/client/rp"
+	"github.com/minhthong176881/oidc-golang/pkg/client/rp/cli"
+	"github.com/minhthong176881/oidc-golang/pkg/http"
 )
 
 var (
