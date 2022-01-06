@@ -54,6 +54,8 @@ func main() {
 		return uuid.New().String()
 	}
 
+	http.Handle("/", rp.Dashboard())
+
 	//register the AuthURLHandler at your preferred path
 	//the AuthURLHandler creates the auth request and redirects the user to the auth server
 	//including state handling with secure cookie and the possibility to use PKCE
