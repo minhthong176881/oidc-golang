@@ -3,7 +3,7 @@ package op
 import (
 	"errors"
 	"net/url"
-	"os"
+	// "os"
 
 	"golang.org/x/text/language"
 )
@@ -60,9 +60,9 @@ func ValidateIssuer(issuer string) error {
 }
 
 func devLocalAllowed(url *url.URL) bool {
-	_, b := os.LookupEnv(OidcDevMode)
-	if !b {
-		return b
-	}
+	// _, b := os.LookupEnv(OidcDevMode)
+	// if !b {
+	// 	return b
+	// }
 	return url.Scheme == "http"
 }

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 	"strings"
@@ -29,6 +30,8 @@ func main() {
 	port := os.Getenv("PORT")
 	scopes := strings.Split(os.Getenv("SCOPES"), " ")
 
+	templatePath := "example/client/view/"
+
 	redirectURI := fmt.Sprintf("http://localhost:%v%v", port, callbackPath)
 	cookieHandler := httphelper.NewCookieHandler(key, key, httphelper.WithUnsecure())
 
@@ -54,7 +57,16 @@ func main() {
 		return uuid.New().String()
 	}
 
-	http.Handle("/", rp.Dashboard())
+	render := func(w http.ResponseWriter, path string, data interface{}) {
+		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("Pragma", "no-cache")
+		w.WriteHeader(http.StatusOK)
+		tlp := template.Must(template.ParseFiles(path))
+		tlp.Execute(w, data)
+	}
+
+	http.Handle("/", rp.Dashboard(render, templatePath + "index.html", nil))
 
 	//register the AuthURLHandler at your preferred path
 	//the AuthURLHandler creates the auth request and redirects the user to the auth server
@@ -73,12 +85,13 @@ func main() {
 
 	//you could also just take the access_token and id_token without calling the userinfo endpoint:
 	marshalToken := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty) {
-		data, err := json.Marshal(tokens)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Write(data)
+		// data, err := json.Marshal(tokens)
+		// if err != nil {
+		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+		// 	return
+		// }
+		// w.Write(data)
+		render(w, templatePath + "callback.html", tokens)
 	}
 
 	//register the CodeExchangeHandler at the callbackPath
