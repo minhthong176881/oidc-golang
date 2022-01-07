@@ -288,8 +288,6 @@ func AuthURLHandler(stateFn func() string, rp RelyingParty) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println()
-
 		//Create code challenge
 		if rp.IsPKCE() {
 			codeChallenge, err := GenerateAndStoreCodeChallenge(w, rp)
@@ -351,6 +349,7 @@ type CodeExchangeCallback func(w http.ResponseWriter, r *http.Request, tokens *o
 func CodeExchangeHandler(callback CodeExchangeCallback, rp RelyingParty) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		state, err := tryReadStateCookie(w, r, rp)
+		fmt.Println(state)
 		if err != nil {
 			http.Error(w, "failed to get state: "+err.Error(), http.StatusUnauthorized)
 			return
