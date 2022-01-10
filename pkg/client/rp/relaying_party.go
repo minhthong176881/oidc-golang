@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -349,7 +348,6 @@ type CodeExchangeCallback func(w http.ResponseWriter, r *http.Request, tokens *o
 func CodeExchangeHandler(callback CodeExchangeCallback, rp RelyingParty) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		state, err := tryReadStateCookie(w, r, rp)
-		fmt.Println(state)
 		if err != nil {
 			http.Error(w, "failed to get state: "+err.Error(), http.StatusUnauthorized)
 			return

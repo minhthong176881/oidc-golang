@@ -426,7 +426,9 @@ func AuthResponseCode(w http.ResponseWriter, r *http.Request, authReq AuthReques
 		AuthRequestError(w, r, authReq, err, authorizer.Encoder())
 		return
 	}
-	http.Redirect(w, r, callback, http.StatusFound)
+	// http.Redirect(w, r, callback, http.StatusFound)
+	http.SetCookie(w, &http.Cookie{Name: "callback", Value: callback, Path: "/"})
+	http.Redirect(w, r, "/interaction/" + codeResponse.state, http.StatusFound)
 }
 
 //AuthResponseToken creates the successful token(s) authentication response
