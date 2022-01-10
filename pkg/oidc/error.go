@@ -18,6 +18,7 @@ const (
 	InteractionRequired  errorType = "interaction_required"
 	LoginRequired        errorType = "login_required"
 	RequestNotSupported  errorType = "request_not_supported"
+	AccessDenied         errorType = "access_denied"
 )
 
 var (
@@ -75,6 +76,11 @@ var (
 	ErrRequestNotSupported = func() *Error {
 		return &Error{
 			ErrorType: RequestNotSupported,
+		}
+	}
+	ErrAccessDenied = func() *Error {
+		return &Error{
+			ErrorType: AccessDenied,
 		}
 	}
 )

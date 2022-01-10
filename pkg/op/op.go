@@ -73,6 +73,7 @@ func CreateRouter(o OpenIDProvider, interceptors ...HttpInterceptor) *mux.Router
 	router.HandleFunc(oidc.DiscoveryEndpoint, discoveryHandler(o, o.Signer()))
 	router.Handle(o.AuthorizationEndpoint().Relative(), intercept(authorizeHandler(o)))
 	router.NewRoute().Path(o.AuthorizationEndpoint().Relative()+"/callback").Queries("id", "{id}").Handler(intercept(authorizeCallbackHandler(o)))
+	router.NewRoute().Path("/callback/error").Handler(intercept(authorizeErrorCallbackHandler(o)))
 	router.Handle(o.TokenEndpoint().Relative(), intercept(tokenHandler(o)))
 	router.HandleFunc(o.IntrospectionEndpoint().Relative(), introspectionHandler(o))
 	router.HandleFunc(o.UserinfoEndpoint().Relative(), userinfoHandler(o))

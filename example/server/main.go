@@ -59,14 +59,17 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	client := r.FormValue("client")
-	// http.Redirect(w, r, "/interaction?id=" + client, http.StatusFound)
 	http.Redirect(w, r, "/authorize/callback?id="+client, http.StatusFound)
 }
 
 func HandleInteraction(w http.ResponseWriter, r *http.Request) {
 	url := fmt.Sprintf("/interaction/%s", mux.Vars(r)["router"]) + "/confirm"
+	abort := fmt.Sprintf("/interaction/%s", mux.Vars(r)["router"]) + "/abort"
+	title := "Authorization"
 	data := map[string]interface{}{
 		"url": url,
+		"abort": abort,
+		"title": title,
 	}
 	render(w, "example/server/view/interaction.html", data)
 }
@@ -80,5 +83,6 @@ func HandleInteractionConfirm(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleInteractionAbort(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/", http.StatusFound)
+	// op.AuthRequestError(w, r, )
+	http.Redirect(w, r, "/callback/error", http.StatusFound)
 }

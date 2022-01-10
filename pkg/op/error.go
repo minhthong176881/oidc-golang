@@ -13,6 +13,18 @@ type ErrAuthRequest interface {
 	GetState() string
 }
 
+func authorizeErrorCallbackHandler(authorizer Authorizer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authReq, err := authorizer.Storage().AuthRequestByID(r.Context(), "id")
+		if err != nil {
+			AuthRequestError(w, r, nil, err, authorizer.Encoder())
+			return
+		}
+		err = oidc.ErrAccessDenied().WithDescription("End-User aborted interaction")
+		AuthRequestError(w, r, authReq, err, authorizer.Encoder())
+	}
+}
+
 func AuthRequestError(w http.ResponseWriter, r *http.Request, authReq ErrAuthRequest, err error, encoder httphelper.Encoder) {
 	if authReq == nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
