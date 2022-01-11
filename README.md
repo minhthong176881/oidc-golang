@@ -22,11 +22,7 @@ Whenever possible we tried to reuse / extend existing packages like `OAuth2 for 
 Check the `/example` folder where example code for different scenarios is located.
 
 ```bash
-# start oidc op server
-# oidc discovery http://localhost:9998/.well-known/openid-configuration
-CAOS_OIDC_DEV=1 go run github.com/minhthong176881/oidc-golang/example/server/default
-# start oidc web client
-CLIENT_ID=web CLIENT_SECRET=web ISSUER=http://localhost:9998/ SCOPES=openid PORT=5556 go run github.com/minhthong176881/oidc-golang/example/client/app
+run `make server` to start server and `make client` to start client
 ```
 
 - browser http://localhost:5556/login will redirect to op server
