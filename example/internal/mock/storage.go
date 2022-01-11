@@ -282,7 +282,7 @@ func (c *ConfClient) RedirectURIs() []string {
 	}
 }
 func (c *ConfClient) PostLogoutRedirectURIs() []string {
-	return []string{}
+	return []string{"http://localhost:5556"}
 }
 
 func (c *ConfClient) LoginURL(id string) string {

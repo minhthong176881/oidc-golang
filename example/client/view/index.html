@@ -131,12 +131,25 @@
 </head>
 
 <body>
+    {{if .isLoggedIn}}
+    <div class="login-card">
+        <h1>Hello</h1>
+        <form autocomplete="off" action="/userinfo" method="get">
+            <button type="submit" class="login login-submit">Get User Infor</button>
+        </form>
+        <div class="login-help">
+            <a href="/logout">[ Logout ]</a>
+          </div>
+    </div>
+    {{end}}
+    {{if not .isLoggedIn}}
     <div class="login-card">
         <h1>Login with OpenID</h1>
         <form autocomplete="off" action="/login" method="get">
             <button type="submit" class="login login-submit">Login</button>
         </form>
     </div>
+    {{end}}
 </body>
 
 </html>

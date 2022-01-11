@@ -259,8 +259,15 @@ func Discover(issuer string, httpClient *http.Client) (Endpoints, error) {
 type RenderTemplate func(w http.ResponseWriter, path string, data interface{})
 
 //Dashsboard function
-func Dashboard(renderFunc RenderTemplate, path string, data interface{}) http.HandlerFunc {
+func Dashboard(renderFunc RenderTemplate, path string, rp RelyingParty) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		isLogged := false
+		for _, cookie := range r.Cookies() {
+			if cookie.Name == "access_token" {
+				isLogged = true
+			}
+		}
+		data := map[string]interface{}{"isLoggedIn": isLogged}
 		renderFunc(w, path, data)
 	}
 }
@@ -282,7 +289,7 @@ func AuthURLHandler(stateFn func() string, rp RelyingParty) http.HandlerFunc {
 		opts := make([]AuthURLOpt, 0)
 		state := stateFn()
 		//Create state cookie
-		if err := trySetStateCookie(w, state, rp); err != nil {
+		if err := TrySetStateCookie(w, state, rp); err != nil {
 			http.Error(w, "failed to create state cookie: "+err.Error(), http.StatusUnauthorized)
 			return
 		}
@@ -383,6 +390,37 @@ func CodeExchangeHandler(callback CodeExchangeCallback, rp RelyingParty) http.Ha
 	}
 }
 
+type UserInfoExchangeCallback func(w http.ResponseWriter, r *http.Request, info oidc.UserInfo)
+
+func UserInfoExchangeHandler(callback UserInfoExchangeCallback, rp RelyingParty) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		accessToken := ""
+		for _, cookie := range r.Cookies() {
+			if cookie.Name == "access_token" {
+				accessToken = cookie.Value		
+			}
+		}
+		if accessToken == "" {
+			http.Error(w, "cannot find access token", http.StatusInternalServerError)
+			return
+		}
+		req, err := http.NewRequest("GET", rp.UserinfoEndpoint(), nil)
+		if err != nil {
+			http.Error(w, "error: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		q := req.URL.Query()
+		q.Add("access_token", accessToken)
+		req.URL.RawQuery = q.Encode()
+		userinfo := oidc.NewUserInfo()
+		if err := httphelper.HttpRequest(rp.HttpClient(), req, &userinfo); err != nil {
+			http.Error(w, "error: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		callback(w, r, userinfo)
+	}
+}
+
 type CodeExchangeUserinfoCallback func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, provider RelyingParty, info oidc.UserInfo)
 
 //UserinfoCallback wraps the callback function of the CodeExchangeHandler
@@ -416,7 +454,16 @@ func Userinfo(token, tokenType, subject string, rp RelyingParty) (oidc.UserInfo,
 	return userinfo, nil
 }
 
-func trySetStateCookie(w http.ResponseWriter, state string, rp RelyingParty) error {
+func LogoutHandler(rp RelyingParty) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rp.CookieHandler().DeleteCookie(w, "access_token")
+		rp.CookieHandler().DeleteCookie(w, "id_token")
+		rp.CookieHandler().DeleteCookie(w, "token_type")
+		http.Redirect(w, r, "/", http.StatusFound)
+	}
+}
+
+func TrySetStateCookie(w http.ResponseWriter, state string, rp RelyingParty) error {
 	if rp.CookieHandler() != nil {
 		if err := rp.CookieHandler().SetCookie(w, stateParam, state); err != nil {
 			return err
@@ -424,6 +471,15 @@ func trySetStateCookie(w http.ResponseWriter, state string, rp RelyingParty) err
 	}
 	return nil
 }
+
+// func trySetCookie(w http.ResponseWriter, name string, value string, rp relyingParty) error {
+// 	if rp.CookieHandler() != nil {
+// 		if err := rp.CookieHandler().SetCookie(w, name, value); err != nil {
+// 			return err
+// 		}
+// 	}
+// 	return nil
+// }
 
 func tryReadStateCookie(w http.ResponseWriter, r *http.Request, rp RelyingParty) (state string, err error) {
 	if rp.CookieHandler() == nil {
@@ -435,6 +491,17 @@ func tryReadStateCookie(w http.ResponseWriter, r *http.Request, rp RelyingParty)
 	}
 	rp.CookieHandler().DeleteCookie(w, stateParam)
 	return state, nil
+}
+
+func TryReadCookie(w http.ResponseWriter, r *http.Request, name string, rp RelyingParty) (value string, err error) {
+	if rp.CookieHandler() == nil {
+		return r.FormValue(name), nil
+	}
+	value, err = rp.CookieHandler().CheckQueryCookie(r, name)
+	if err != nil {
+		return "", err
+	}
+	return value, nil
 }
 
 type OptionFunc func(RelyingParty)
