@@ -143,13 +143,19 @@
         <div class="infor"><span class="infor-title">Token Type:</span> {{ .TokenType }}</div>
         <div class="infor"><span class="infor-title">Expiry:</span> {{ .Expiry }}</div>
         <div class="infor"><span class="infor-title"> ID Token:</span> <span style="word-wrap: break-word;">{{ .IDToken }}</span></div>
-        <button id="back" class="login login-submit" onclick="back()">Home</button>
+        <div style="display: flex">
+            <button id="back" class="login login-submit" onclick="back()">Home</button>
+            <button id="userinfo" class="login login-submit" onclick="userinfo()">Get User Infor</button>
+        </div>
     </div>
 </body>
 
 <script>
     function back() {
         window.location.href = "/";
+    }
+    function userinfo() {
+        window.location.href = "/userinfo";
     }
 </script>
 

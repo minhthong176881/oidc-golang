@@ -2,6 +2,7 @@ package main
 
 import (
 	// "encoding/json"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -74,14 +75,14 @@ func main() {
 	http.Handle("/login", rp.AuthURLHandler(state, provider))
 
 	//for demonstration purposes the returned userinfo response is written as JSON object onto response
-	// marshalUserinfo := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty, info oidc.UserInfo) {
-	// 	data, err := json.Marshal(info)
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// 	w.Write(data)
-	// }
+	marshalUserinfo := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty, info oidc.UserInfo) {
+		data, err := json.Marshal(info)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Write(data)
+	}
 
 	//you could also just take the access_token and id_token without calling the userinfo endpoint:
 	marshalToken := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens, state string, rp rp.RelyingParty) {
@@ -91,6 +92,7 @@ func main() {
 		// 	return
 		// }
 		// w.Write(data)
+		http.SetCookie(w, &http.Cookie{Name: "access_token", Value: tokens.AccessToken, Path: "/"})
 		render(w, templatePath + "callback.html", tokens)
 	}
 
@@ -104,6 +106,8 @@ func main() {
 	//if you would use the callback without calling the userinfo endpoint, simply switch the callback handler for:
 	//
 	http.Handle(callbackPath, rp.CodeExchangeHandler(marshalToken, provider))
+
+	http.Handle("userinfo", rp.CodeExchangeHandler(rp.UserinfoCallback(marshalUserinfo), provider))
 
 	lis := fmt.Sprintf("127.0.0.1:%s", port)
 	logrus.Infof("listening on http://%s/", lis)
